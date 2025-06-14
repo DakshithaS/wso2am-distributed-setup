@@ -2,16 +2,6 @@
 
 🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database integration**
 
-## 📋 Overview
-
-This setup provides a complete automated solution for deploying WSO2 API Manager 3.1.0 in distributed mode with:
-- **Automated MySQL database setup** with Docker
-- **Configurable database settings** via `.env` file
-- **Smart port management** and availability checking
-- **Distributed profile creation** and configuration
-- **Integrated TOML configuration management**
-- **Cross-platform support** (Linux, macOS, Windows)
-
 ## 🎯 Quick Start
 
 ### ⚠️ Prerequisites First
@@ -97,12 +87,6 @@ wso2am-3.1.0-distributed-setup/
 │   └── startup-gw.log
 └── ...existing files...
 ```
-
-**🔒 Note:** The `.gitignore` file ensures that:
-- WSO2 packs and extracted directories are NOT tracked
-- Generated profiles in `components/` are NOT tracked  
-- Log files are NOT tracked
-- Only the automation scripts and configuration templates are version controlled
 
 ## ⚙️ Configuration
 
@@ -272,14 +256,6 @@ nano .env
 ./scripts/setup-mysql-docker.sh
 ```
 
-### Database Backup and Restore
-```bash
-# Backup databases
-docker exec wso2am-mysql mysqldump -uroot -pmy-secret --all-databases > backup.sql
-
-# Restore databases
-docker exec -i wso2am-mysql mysql -uroot -pmy-secret < backup.sql
-```
 
 ### Viewing Logs
 ```bash
@@ -309,60 +285,10 @@ sudo kill $(lsof -t -i:3326)
 MYSQL_PORT=3327
 ```
 
-**❌ Permission Denied**
-```bash
-# Make scripts executable
-chmod +x scripts/*.sh
-```
-
-**❌ MySQL Connection Failed**
-```bash
-# Check container status
-docker ps -a | grep wso2am-mysql
-
-# View container logs
-docker logs wso2am-mysql
-
-# Test database connection
-mysql -h127.0.0.1 -P3326 -uroot -pmy-secret -e "SHOW DATABASES;"
-```
-
-**❌ WSO2 Profile Won't Start**
-```bash
-# Check port conflicts
-netstat -tulpn | grep :9443
-
-# Check logs
-tail -f logs/startup-km.log
-tail -f components/wso2am-km/repository/logs/wso2carbon.log
-```
-
-### Database Connection URLs
-
-**Development:**
-```
-APIM DB: jdbc:mysql://localhost:3326/apim_db310?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-Shared DB: jdbc:mysql://localhost:3326/shared_db310?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-```
-
 **Credentials:**
 - APIM DB: `apimadmin / apimadmin123`
 - Shared DB: `sharedadmin / sharedadmin123`
 - Root: `root / my-secret`
-
-## 🌍 Cross-Platform Support
-
-### Linux/macOS
-All scripts work natively with bash shell.
-
-### Windows (WSL)
-Use Windows Subsystem for Linux (WSL) to run the bash scripts in a Linux environment. This is the recommended approach for Windows users.
-
-```bash
-# In WSL terminal
-./scripts/setup-mysql-docker.sh
-./scripts/setup-distributed-profiles.sh
-```
 
 ## 📋 Prerequisites
 
@@ -377,8 +303,6 @@ Use Windows Subsystem for Linux (WSL) to run the bash scripts in a Linux environ
 **Before running any scripts, you MUST prepare the WSO2 API Manager pack:**
 
 1. **Download WSO2 API Manager 3.1.0:**
-   - Go to [WSO2 API Manager Downloads](https://wso2.com/api-manager/)
-   - Download: `wso2am-3.1.0.zip`
 
 2. **Extract the pack:**
    ```bash
@@ -388,11 +312,7 @@ Use Windows Subsystem for Linux (WSL) to run the bash scripts in a Linux environ
 3. **Apply latest updates using WSO2 Update tool:**
    ```bash
    cd wso2am-3.1.0/bin
-   ./wso2update_darwin    # For macOS
-   # or
-   ./wso2update_linux     # For Linux
-   # or
-   ./wso2update.bat       # For Windows
+   ./wso2update_darwin 
    ```
 
 4. **Place the EXTRACTED folder in the root directory:**
@@ -430,13 +350,7 @@ Ensure these ports are available:
 ## 🎓 Getting Started Tutorial
 
 ### Step 1: Download WSO2 API Manager Pack ⚡ **REQUIRED FIRST STEP**
-```bash
-# Download WSO2 API Manager 3.1.0 from https://wso2.com/api-manager/
-# Place wso2am-3.1.0.zip in the root directory
 
-# Verify the file is in place
-ls -la wso2am-3.1.0.zip
-```
 
 ### Step 2: Initial Setup
 ```bash
@@ -485,27 +399,3 @@ curl http://localhost:8280/services/
 # Graceful shutdown
 ./scripts/stop-distributed-profiles.sh
 ```
-
-## 🔒 Security Notes
-
-- Change default passwords in `.env` file
-- Use secure passwords for database users
-- Configure SSL certificates for production
-- Restrict network access to management ports
-- Enable firewall rules for production deployment
-
-## 📄 License
-
-This setup is provided as-is for WSO2 API Manager distributed deployment automation. Please refer to WSO2's official licensing for the API Manager software.
-
-## 🆘 Support
-
-For issues and questions:
-1. Check the troubleshooting section above
-2. Review the logs in `logs/` directory
-3. Check MySQL container status: `docker ps -a | grep wso2am-mysql`
-4. Refer to [WSO2 API Manager documentation](https://apim.docs.wso2.com/)
-
----
-
-**🎉 Happy API Management with WSO2!**
