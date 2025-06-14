@@ -14,7 +14,15 @@ This setup provides a complete automated solution for deploying WSO2 API Manager
 
 ## 🎯 Quick Start
 
-### 1. One-Command Complete Setup
+### ⚠️ Prerequisites First
+```bash
+# 1. Download, extract, and update WSO2 APIM 3.1.0
+unzip wso2am-3.1.0.zip
+cd wso2am-3.1.0/bin && ./wso2update_darwin  # Apply latest updates
+# Place the extracted wso2am-3.1.0/ folder in project root
+```
+
+### 2. One-Command Complete Setup
 ```bash
 # Setup MySQL database with Docker
 ./scripts/setup-mysql-docker.sh
@@ -29,7 +37,7 @@ This setup provides a complete automated solution for deploying WSO2 API Manager
 ./scripts/start-distributed-profiles.sh
 ```
 
-### 2. Management Commands
+### 3. Management Commands
 ```bash
 # Check service status
 ./scripts/status-distributed-profiles.sh
@@ -67,8 +75,14 @@ wso2am-3.1.0-distributed-setup/
 ### **After Adding WSO2 Pack and Running Setup:**
 ```
 wso2am-3.1.0-distributed-setup/
-├── wso2am-3.1.0.zip                   # ← PLACE YOUR DOWNLOAD HERE
-├── wso2am-3.1.0/                      # ← Auto-extracted by scripts
+├── wso2am-3.1.0/                      # ← EXTRACTED & UPDATED WSO2 APIM
+│   ├── bin/
+│   │   ├── wso2server.sh
+│   │   ├── wso2update_darwin           # Update tool
+│   │   └── profileSetup.sh
+│   ├── repository/
+│   ├── lib/
+│   └── updates/                        # ← Contains update info after wso2update
 ├── components/                         # ← Auto-created distributed profiles
 │   ├── wso2am-km/                     # Key Manager
 │   ├── wso2am-tm/                     # Traffic Manager
@@ -360,23 +374,44 @@ Use Windows Subsystem for Linux (WSL) to run the bash scripts in a Linux environ
 
 ### **🚨 IMPORTANT: WSO2 API Manager Pack Setup**
 
-**Before running any scripts, you MUST download and place the WSO2 API Manager pack in the root directory:**
+**Before running any scripts, you MUST prepare the WSO2 API Manager pack:**
 
 1. **Download WSO2 API Manager 3.1.0:**
    - Go to [WSO2 API Manager Downloads](https://wso2.com/api-manager/)
    - Download: `wso2am-3.1.0.zip`
 
-2. **Place the ZIP file in the root directory:**
+2. **Extract the pack:**
+   ```bash
+   unzip wso2am-3.1.0.zip
+   ```
+
+3. **Apply latest updates using WSO2 Update tool:**
+   ```bash
+   cd wso2am-3.1.0/bin
+   ./wso2update_darwin    # For macOS
+   # or
+   ./wso2update_linux     # For Linux
+   # or
+   ./wso2update.bat       # For Windows
+   ```
+
+4. **Place the EXTRACTED folder in the root directory:**
    ```
    wso2am-3.1.0-distributed-setup/
-   ├── wso2am-3.1.0.zip          # ← PLACE ZIP FILE HERE
+   ├── wso2am-3.1.0/             # ← EXTRACTED FOLDER HERE (updated)
+   │   ├── bin/
+   │   ├── repository/
+   │   ├── lib/
+   │   └── ...
    ├── scripts/
    ├── conf/
    └── README.md
    ```
 
-3. **File Naming Requirements:**
-   - File must be named exactly: `wso2am-3.1.0.zip`
+5. **Requirements:**
+   - Folder must be named exactly: `wso2am-3.1.0/`
+   - Must be extracted (not ZIP file)
+   - Must be updated with latest patches using wso2update tool
    - Place it in the root directory (same level as `scripts/` folder)
    - Do NOT extract it manually - scripts will handle extraction
 

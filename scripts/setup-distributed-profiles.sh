@@ -1,25 +1,28 @@
 #!/bin/bash
 
-# Simple WSO2 API Manager distributed setup script
+# WSO2 API Manager distributed profiles setup script
+# Requires extracted and updated WSO2 APIM pack in root directory
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Find WSO2AM directory or extract from zip
+# Validate WSO2AM extracted directory exists
+echo "🔍 Validating WSO2 APIM installation..."
+
 SOURCE_DIR=""
 for dir in "$BASE_DIR"/wso2am-*; do
     if [ -d "$dir" ] && [ -f "$dir/bin/wso2server.sh" ]; then
         SOURCE_DIR="$dir"
+        echo "✅ Found WSO2 APIM at: $(basename "$dir")"
         break
     fi
 done
 
 if [ -z "$SOURCE_DIR" ]; then
-    echo "Extracting WSO2AM from zip..."
-    cd "$BASE_DIR"
-    unzip -q wso2am-*.zip
-    SOURCE_DIR=$(find "$BASE_DIR" -name "wso2am-*" -type d | head -1)
+    echo "❌ Error: WSO2 API Manager directory not found!"
+    echo "Place extracted WSO2 APIM folder (wso2am-3.1.0/) in project root"
+    exit 1
 fi
 
 COMPONENTS_DIR="$BASE_DIR/components"
