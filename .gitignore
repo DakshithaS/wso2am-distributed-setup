@@ -1,0 +1,32 @@
+# WSO2 API Manager Distributed Setup
+
+# WSO2 Installation Files
+wso2am-*/
+*.zip
+
+# Generated Profiles
+components/
+
+# Logs
+logs/
+*.log
+
+# Database Files
+*.sql
+*.dump
+
+# Backup Files
+*.bak
+
+# Docker Data
+docker-data/
+mysql-data/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
