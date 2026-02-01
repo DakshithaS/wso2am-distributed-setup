@@ -78,7 +78,7 @@ echo ""
 update_toml_db_config "$TOML_DIR/dev_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/pub_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/tm_deployment.toml" "both"
-update_toml_db_config "$TOML_DIR/km_deployment.toml" "shared"
+update_toml_db_config "$TOML_DIR/km_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/gw_deployment.toml" "shared"
 
 echo ""
