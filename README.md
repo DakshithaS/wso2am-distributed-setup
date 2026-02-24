@@ -2,6 +2,15 @@
 
 🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database integration**
 
+## ⚠️ Critical Requirements
+
+### Java Compatibility (MANDATORY)
+**WSO2 API Manager 3.2.0 requires Java 8 or 11 only!**
+- ✅ **Supported**: Java 8, Java 11
+- ❌ **NOT Supported**: Java 17, Java 21, or higher versions
+- **Error if wrong version**: `CARBON is supported only on JDK 1.7, 1.8, 9, 10 and 11`
+
+
 ## 🎯 Quick Start
 
 ### ⚠️ Prerequisites First
@@ -294,7 +303,7 @@ MYSQL_PORT=3327
 
 ### Required Software
 - **Docker**: For MySQL container management
-- **Java 8/11**: For WSO2 API Manager
+- **Java 8 or 11 ONLY** ⚠️: For WSO2 API Manager (Java 17+ NOT supported)
 - **Disk Space**: ~5GB for all profiles
 - **Memory**: 8GB+ RAM recommended
 
