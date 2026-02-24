@@ -21,7 +21,7 @@ done
 
 if [ -z "$SOURCE_DIR" ]; then
     echo "❌ Error: WSO2 API Manager directory not found!"
-    echo "Place extracted WSO2 APIM folder (wso2am-3.1.0/) in project root"
+    echo "Place extracted WSO2 APIM folder (wso2am-3.2.0/) in project root"
     exit 1
 fi
 

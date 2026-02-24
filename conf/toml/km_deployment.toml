@@ -14,14 +14,14 @@ create_admin_account = true
 
 [database.apim_db]
 type = "mysql"
-url = "jdbc:mysql://localhost:3356/apim_db310?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+url = "jdbc:mysql://localhost:3356/apim_db320?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
 username = "apimadmin"
 password = "apimadmin123"
 driver="com.mysql.cj.jdbc.Driver"
 
 [database.shared_db]
 type = "mysql"
-url = "jdbc:mysql://localhost:3356/shared_db310?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+url = "jdbc:mysql://localhost:3356/shared_db320?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
 username = "sharedadmin"
 password = "sharedadmin123"
 driver="com.mysql.cj.jdbc.Driver"

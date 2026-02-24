@@ -1,4 +1,4 @@
-# WSO2 API Manager 3.1.0 Distributed Setup
+# WSO2 API Manager 3.2.0 Distributed Setup
 
 🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database integration**
 
@@ -6,10 +6,10 @@
 
 ### ⚠️ Prerequisites First
 ```bash
-# 1. Download, extract, and update WSO2 APIM 3.1.0
-unzip wso2am-3.1.0.zip
-cd wso2am-3.1.0/bin && ./wso2update_darwin  # Apply latest updates
-# Place the extracted wso2am-3.1.0/ folder in project root
+# 1. Download, extract, and update WSO2 APIM 3.2.0
+unzip wso2am-3.2.0.zip
+cd wso2am-3.2.0/bin && ./wso2update_darwin  # Apply latest updates
+# Place the extracted wso2am-3.2.0/ folder in project root
 ```
 
 ### 2. One-Command Complete Setup
@@ -40,7 +40,7 @@ cd wso2am-3.1.0/bin && ./wso2update_darwin  # Apply latest updates
 
 ### **Repository Structure (Clean - Before Setup):**
 ```
-wso2am-3.1.0-distributed-setup/
+wso2am-distributed-setup/
 ├── README.md                           # This comprehensive guide
 ├── .env                               # Configuration file (tracked in Git)
 ├── .gitignore                          # Git ignore rules
@@ -64,8 +64,8 @@ wso2am-3.1.0-distributed-setup/
 
 ### **After Adding WSO2 Pack and Running Setup:**
 ```
-wso2am-3.1.0-distributed-setup/
-├── wso2am-3.1.0/                      # ← EXTRACTED & UPDATED WSO2 APIM
+wso2am-distributed-setup/
+├── wso2am-3.2.0/                      # ← EXTRACTED & UPDATED WSO2 APIM
 │   ├── bin/
 │   │   ├── wso2server.sh
 │   │   ├── wso2update_darwin           # Update tool
@@ -100,8 +100,8 @@ MYSQL_ROOT_PASSWORD=my-secret      # MySQL root password
 CONTAINER_NAME=wso2am-mysql        # Docker container name
 
 # Database Configuration
-APIM_DB_NAME=apim_db310           # API Manager database name
-SHARED_DB_NAME=shared_db310       # Shared database name
+APIM_DB_NAME=apim_db320           # API Manager database name
+SHARED_DB_NAME=shared_db320       # Shared database name
 APIM_DB_USER=apimadmin           # API Manager database user
 APIM_DB_PASSWORD=apimadmin123    # API Manager database password
 SHARED_DB_USER=sharedadmin       # Shared database user
@@ -302,23 +302,23 @@ MYSQL_PORT=3327
 
 **Before running any scripts, you MUST prepare the WSO2 API Manager pack:**
 
-1. **Download WSO2 API Manager 3.1.0:**
+1. **Download WSO2 API Manager 3.2.0:**
 
 2. **Extract the pack:**
    ```bash
-   unzip wso2am-3.1.0.zip
+   unzip wso2am-3.2.0.zip
    ```
 
 3. **Apply latest updates using WSO2 Update tool:**
    ```bash
-   cd wso2am-3.1.0/bin
+   cd wso2am-3.2.0/bin
    ./wso2update_darwin 
    ```
 
 4. **Place the EXTRACTED folder in the root directory:**
    ```
-   wso2am-3.1.0-distributed-setup/
-   ├── wso2am-3.1.0/             # ← EXTRACTED FOLDER HERE (updated)
+   wso2am-distributed-setup/
+   ├── wso2am-3.2.0/             # ← EXTRACTED FOLDER HERE (updated)
    │   ├── bin/
    │   ├── repository/
    │   ├── lib/
@@ -329,7 +329,7 @@ MYSQL_PORT=3327
    ```
 
 5. **Requirements:**
-   - Folder must be named exactly: `wso2am-3.1.0/`
+   - Folder must be named exactly: `wso2am-3.2.0/`
    - Must be extracted (not ZIP file)
    - Must be updated with latest patches using wso2update tool
    - Place it in the root directory (same level as `scripts/` folder)
@@ -337,7 +337,7 @@ MYSQL_PORT=3327
 
 **⚠️ The setup scripts will automatically:**
 - Detect the ZIP file
-- Extract it to `wso2am-3.1.0/` directory
+- Extract it to `wso2am-3.2.0/` directory
 - Create distributed profile copies in `components/` directory
 
 ### Network Ports
@@ -355,7 +355,7 @@ Ensure these ports are available:
 ### Step 2: Initial Setup
 ```bash
 # Clone or download this setup
-cd wso2am-3.1.0-distributed-setup
+cd wso2am-distributed-setup
 
 # Make scripts executable (Linux/macOS)
 chmod +x scripts/*.sh

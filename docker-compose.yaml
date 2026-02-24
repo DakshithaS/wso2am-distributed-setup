@@ -15,7 +15,7 @@ services:
     volumes:
       - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
       - ./conf/mysql/conf/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
-      - ./wso2am-3.1.0/dbscripts:/home/dbScripts
+      - ./wso2am-3.2.0/dbscripts:/home/dbScripts
       - mysql-apim-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "sh", "-c", "mysqladmin ping -uroot -proot && [ -f /var/lib/mysql/initialization-complete.flag ]"]
