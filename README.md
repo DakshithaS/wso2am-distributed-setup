@@ -1,24 +1,23 @@
-# WSO2 API Manager 3.2.0 Distributed Setup
+# WSO2 API Manager 4.x.0 Distributed Setup
 
 🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database integration**
 
 ## ⚠️ Critical Requirements
 
 ### Java Compatibility (MANDATORY)
-**WSO2 API Manager 3.2.0 requires Java 8 or 11 only!**
-- ✅ **Supported**: Java 8, Java 11
-- ❌ **NOT Supported**: Java 17, Java 21, or higher versions
-- **Error if wrong version**: `CARBON is supported only on JDK 1.7, 1.8, 9, 10 and 11`
+**WSO2 API Manager 4.x.0 requires Java 11 or 17!**
+- ✅ **Supported**: Java 11, Java 17
+- ❌ **NOT Supported**: Java 8, Java 21, or other versions
+- **Error if wrong version**: Check compatibility in docs
 
 
 ## 🎯 Quick Start
 
 ### ⚠️ Prerequisites First
 ```bash
-# 1. Download, extract, and update WSO2 APIM 3.2.0
-unzip wso2am-3.2.0.zip
-cd wso2am-3.2.0/bin && ./wso2update_darwin  # Apply latest updates
-# Place the extracted wso2am-3.2.0/ folder in project root
+# 1. Download, extract, and update WSO2 APIM 4.x.0 (e.g., 4.0.0, 4.1.0, 4.2.0, 4.3.0)
+unzip wso2am-4.x.0.zip
+# Place the extracted wso2am-4.x.0/ folder in project root
 ```
 
 ### 2. One-Command Complete Setup
@@ -57,10 +56,8 @@ wso2am-distributed-setup/
 ├── conf/
 │   ├── mysql-connector-j-9.2.0.jar   # MySQL connector
 │   └── toml/                          # Profile-specific configurations
-│       ├── km_deployment.toml
+│       ├── cp_deployment.toml
 │       ├── tm_deployment.toml
-│       ├── dev_deployment.toml
-│       ├── pub_deployment.toml
 │       └── gw_deployment.toml
 └── scripts/                            # Automation scripts
     ├── setup-mysql-docker.sh          # MySQL Docker setup
@@ -74,25 +71,20 @@ wso2am-distributed-setup/
 ### **After Adding WSO2 Pack and Running Setup:**
 ```
 wso2am-distributed-setup/
-├── wso2am-3.2.0/                      # ← EXTRACTED & UPDATED WSO2 APIM
+├── wso2am-4.x.0/                      # ← EXTRACTED WSO2 APIM (any 4.x.0 version)
 │   ├── bin/
-│   │   ├── wso2server.sh
-│   │   ├── wso2update_darwin           # Update tool
+│   │   ├── api-manager.sh
 │   │   └── profileSetup.sh
 │   ├── repository/
 │   ├── lib/
-│   └── updates/                        # ← Contains update info after wso2update
+│   └── updates/
 ├── components/                         # ← Auto-created distributed profiles
-│   ├── wso2am-km/                     # Key Manager
+│   ├── wso2am-cp/                     # Control Plane (Publisher + DevPortal + Key Manager)
 │   ├── wso2am-tm/                     # Traffic Manager
-│   ├── wso2am-dev/                    # Developer Portal
-│   ├── wso2am-pub/                    # Publisher
-│   └── wso2am-gw/                     # Gateway
+│   └── wso2am-gw/                     # Gateway Worker
 ├── logs/                              # ← Auto-created startup logs
-│   ├── startup-km.log
+│   ├── startup-cp.log
 │   ├── startup-tm.log
-│   ├── startup-dev.log
-│   ├── startup-pub.log
 │   └── startup-gw.log
 └── ...existing files...
 ```
@@ -121,10 +113,8 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 
 ### Profile Port Configuration
 - **Traffic Manager**: 9711 (offset: 0)
-- **Key Manager**: 9443 (offset: 1)
-- **Publisher**: 9445 (offset: 2)
-- **Developer Portal**: 9446 (offset: 3)
-- **Gateway**: 8284, 8247 (offset: 4)
+- **Control Plane**: 9443, 9444 (offset: 0)
+- **Gateway Worker**: 8284, 8247 (offset: 0)
 
 ## 🛠️ Scripts Reference
 
@@ -163,10 +153,8 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 ```
 
 **Updated Files:**
-- `dev_deployment.toml` (Developer Portal)
-- `pub_deployment.toml` (Publisher)
-- `km_deployment.toml` (Key Manager)
-- `gw_deployment.toml` (Gateway)
+- `cp_deployment.toml` (Control Plane)
+- `gw_deployment.toml` (Gateway Worker)
 - `tm_deployment.toml` (Traffic Manager)
 
 ### 3. `setup-distributed-profiles.sh` 📁
@@ -174,23 +162,21 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 
 **Features:**
 - ✅ **Auto-Detection**: Finds WSO2AM installation or extracts from ZIP
-- ✅ **Profile Creation**: Creates 5 distinct profiles
+- ✅ **Profile Creation**: Creates 3 distinct profiles
 - ✅ **MySQL Connector**: Installs MySQL connector in each profile
 - ✅ **TOML Configuration**: Applies profile-specific settings
 - ✅ **Backup Creation**: Preserves original configurations
 
 **Profiles Created:**
-- `wso2am-km` (Key Manager)
+- `wso2am-cp` (Control Plane)
 - `wso2am-tm` (Traffic Manager)
-- `wso2am-dev` (Developer Portal)
-- `wso2am-pub` (Publisher)
-- `wso2am-gw` (Gateway)
+- `wso2am-gw` (Gateway Worker)
 
 ### 4. `start-distributed-profiles.sh` ▶️
 **Starts all profiles in correct distributed deployment order**
 
 **Features:**
-- ✅ **Ordered Startup**: TM → KM → PUB → DEV → GW
+- ✅ **Ordered Startup**: TM → CP → GW
 - ✅ **Port Validation**: Checks port availability before starting
 - ✅ **Health Monitoring**: Verifies each service starts properly
 - ✅ **PID Tracking**: Creates PID files for process management
@@ -198,17 +184,15 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 
 **Startup Order:**
 1. Traffic Manager (9711)
-2. Key Manager (9443)
-3. Publisher (9443 + offset 2)
-4. Developer Portal (9446)
-5. Gateway (8280, 8243)
+2. Control Plane (9443, 9444)
+3. Gateway Worker (8284, 8247)
 
 ### 5. `stop-distributed-profiles.sh` ⏹️
 **Force stops all profiles immediately in reverse order**
 
 **Features:**
 - ✅ **Immediate Termination**: Force kills all WSO2 processes (SIGKILL)
-- ✅ **Reverse Order**: GW → DEV → PUB → KM → TM
+- ✅ **Reverse Order**: GW → CP → TM
 - ✅ **Multiple Detection**: Finds processes by PID files, patterns, and port usage
 - ✅ **PID Cleanup**: Removes stale PID files
 - ✅ **Final Verification**: Confirms all processes are terminated
@@ -275,7 +259,7 @@ docker logs wso2am-mysql
 tail -f logs/startup-*.log
 
 # Individual profile logs
-tail -f components/wso2am-km/repository/logs/wso2carbon.log
+tail -f components/wso2am-cp/repository/logs/wso2carbon.log
 ```
 
 ## 🔍 Troubleshooting
@@ -353,7 +337,7 @@ MYSQL_PORT=3327
 Ensure these ports are available:
 - **3326**: MySQL (configurable)
 - **9711**: Traffic Manager
-- **9443-9446**: Management consoles
+- **9443-9444**: Management consoles
 - **8280, 8243**: Gateway endpoints
 
 ## 🎓 Getting Started Tutorial
@@ -399,9 +383,9 @@ curl http://localhost:8280/services/
 
 ### Step 6: Access Services
 - **Publisher**: https://localhost:9443/publisher
-- **Developer Portal**: https://localhost:9446/devportal
+- **Developer Portal**: https://localhost:9444/devportal
 - **Admin Portal**: https://localhost:9443/admin
-- **Gateway**: http://localhost:8280, https://localhost:8243
+- **Gateway Worker**: http://localhost:8284, https://localhost:8247
 
 ### Step 7: Shutdown
 ```bash

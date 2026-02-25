@@ -38,6 +38,7 @@ update_toml_db_config() {
         /^\[database\.apim_db\]/ { in_apim_db = 1 }
         /^\[/ && !/^\[database\.apim_db\]/ { in_apim_db = 0 }
         in_apim_db && /^url = / { 
+            gsub(/127\.0\.0\.1:[0-9]+\/[^?]*/, "127.0.0.1:" port "/" dbname)
             gsub(/localhost:[0-9]+\/[^?]*/, "localhost:" port "/" dbname)
             gsub(/WSO2AM_DB/, dbname)
         }
@@ -55,8 +56,9 @@ update_toml_db_config() {
         /^\[database\.shared_db\]/ { in_shared_db = 1 }
         /^\[/ && !/^\[database\.shared_db\]/ { in_shared_db = 0 }
         in_shared_db && /^url = / { 
+            gsub(/127\.0\.0\.1:[0-9]+\/[^?]*/, "127.0.0.1:" port "/" dbname)
             gsub(/localhost:[0-9]+\/[^?]*/, "localhost:" port "/" dbname)
-            gsub(/WSO2SHARED_DB/, dbname)
+            gsub(/WSO2AM_SHARED_DB/, dbname)
         }
         in_shared_db && /^username = / { $0 = "username = \"" user "\"" }
         in_shared_db && /^password = / { $0 = "password = \"" pass "\"" }
@@ -75,10 +77,8 @@ echo "Shared DB: $SHARED_DB_NAME (user: $SHARED_DB_USER)"
 echo ""
 
 # Update each TOML file with appropriate database configurations
-update_toml_db_config "$TOML_DIR/dev_deployment.toml" "both"
-update_toml_db_config "$TOML_DIR/pub_deployment.toml" "both"
+update_toml_db_config "$TOML_DIR/cp_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/tm_deployment.toml" "both"
-update_toml_db_config "$TOML_DIR/km_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/gw_deployment.toml" "shared"
 
 echo ""

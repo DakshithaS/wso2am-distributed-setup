@@ -30,8 +30,8 @@ echo "Setting up MySQL databases for WSO2 API Manager..."
 mysql -h"$MYSQL_HOST" -P"$MYSQL_PORT" -uroot -p"$MYSQL_ROOT_PASSWORD" <<EOF
 DROP DATABASE IF EXISTS $APIM_DB_NAME;
 DROP DATABASE IF EXISTS $SHARED_DB_NAME;
-CREATE DATABASE $APIM_DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE DATABASE $SHARED_DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE $APIM_DB_NAME CHARACTER SET latin1;
+CREATE DATABASE $SHARED_DB_NAME CHARACTER SET latin1;
 
 DROP USER IF EXISTS '$APIM_DB_USER'@'%';
 DROP USER IF EXISTS '$SHARED_DB_USER'@'%';
@@ -46,7 +46,7 @@ EOF
 # Find WSO2AM installation for DB scripts
 SOURCE_DIR=""
 for dir in "$BASE_DIR"/wso2am-*; do
-    if [ -d "$dir" ] && [ -f "$dir/bin/wso2server.sh" ]; then
+    if [ -d "$dir" ] && [ -f "$dir/bin/api-manager.sh" ]; then
         SOURCE_DIR="$dir"
         break
     fi

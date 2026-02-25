@@ -192,7 +192,9 @@ else
       -e MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD" \
       -p "$MYSQL_PORT:3306" \
       mysql:8.0 \
-      --default-authentication-plugin=mysql_native_password
+      --default-authentication-plugin=mysql_native_password \
+      --character-set-server=latin1 \
+      --collation-server=latin1_swedish_ci
 fi
 
 # Wait for MySQL to be ready

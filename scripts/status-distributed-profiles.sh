@@ -6,16 +6,14 @@ BASE_DIR="$(dirname "$SCRIPT_DIR")"
 COMPONENTS_DIR="$BASE_DIR/components"
 
 # Profiles and their ports
-PROFILES=("tm" "km" "pub" "dev" "gw")
-PROFILE_NAMES=("Traffic Manager" "Key Manager" "Publisher" "Developer Portal" "Gateway")
+PROFILES=("tm" "cp" "gw")
+PROFILE_NAMES=("Traffic Manager" "Control Plane" "Gateway Worker")
 
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
         "tm") echo "9711" ;;
-        "km") echo "9443" ;;
-        "pub") echo "9445" ;;
-        "dev") echo "9446" ;;
+        "cp") echo "9443 9444" ;;
         "gw") echo "8284 8247" ;;
         *) echo "" ;;
     esac

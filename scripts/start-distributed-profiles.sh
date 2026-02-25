@@ -7,18 +7,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$(dirname "$SCRIPT_DIR")"
 COMPONENTS_DIR="$BASE_DIR/components"
 
-# Start profiles in order: tm -> km -> pub -> dev -> gw
-PROFILES=("tm" "km" "pub" "dev" "gw")
-PROFILE_NAMES=("Traffic Manager" "Key Manager" "Publisher" "Developer Portal" "Gateway")
+# Start profiles in order: tm -> cp -> gw (Traffic Manager first, then Control Plane, then Gateway)
+PROFILES=("tm" "cp" "gw")
+PROFILE_NAMES=("Traffic Manager" "Control Plane" "Gateway Worker")
 
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9711" ;;
-        "km") echo "9443" ;;
-        "pub") echo "9445" ;;
-        "dev") echo "9446" ;;
-        "gw") echo "8284 8247" ;;
+        "tm") echo "9713" ;;  # 9711 + 2 (offset for TM)
+        "cp") echo "9443 9443" ;;  # Control Plane: publisher and devportal (offset 0)
+        "gw") echo "8281 8244" ;;  # Gateway: HTTP and HTTPS (offset 1: 8280+1, 8243+1)
         *) echo "" ;;
     esac
 }
@@ -98,7 +96,14 @@ for i in "${!PROFILES[@]}"; do
     if [ -d "$profile_dir" ]; then
         echo "⏳ Starting $profile_name..."
         cd "$profile_dir"
-        nohup sh bin/wso2server.sh > "$BASE_DIR/logs/startup-$profile.log" 2>&1 &
+        # Determine the profile flag
+        case $profile in
+            "tm") profile_flag="traffic-manager" ;;
+            "cp") profile_flag="control-plane" ;;
+            "gw") profile_flag="gateway-worker" ;;
+        esac
+        export JAVA_HOME="/Users/dakshithas/.sdkman/candidates/java/11.0.26-tem"
+        nohup sh bin/api-manager.sh -Dprofile=$profile_flag > "$BASE_DIR/logs/startup-$profile.log" 2>&1 &
         echo $! > "$profile.pid"
         echo "   Started with PID: $(cat $profile.pid)"
         
@@ -129,7 +134,7 @@ for i in "${!STARTED_SERVICES[@]}"; do
     
     profile_up=true
     for port in $ports; do
-        if ! check_service_up $port 90; then  # 90 second timeout per port
+        if ! check_service_up $port 10; then  # 10 second timeout per port
             profile_up=false
             all_services_up=false
         fi
@@ -151,11 +156,9 @@ fi
 
 echo ""
 echo "📋 Service URLs:"
-echo "   • Traffic Manager:  https://localhost:9711/carbon"
-echo "   • Key Manager:      https://localhost:9443/carbon"  
-echo "   • Admin:            https://localhost:9445/admin"
-echo "   • Publisher:        https://localhost:9445/publisher"
-echo "   • Developer Portal: https://localhost:9446/devportal"
-echo "   • Gateway:          https://localhost:8284 (HTTP) / https://localhost:8247 (HTTPS)"
+echo "   • Traffic Manager:  https://localhost:9713/carbon"
+echo "   • Control Plane:    https://localhost:9443/publisher"
+echo "                      https://localhost:9443/devportal"
+echo "   • Gateway Worker:   https://localhost:8281 (HTTP) / https://localhost:8244 (HTTPS)"
 echo ""
 echo "📁 Logs available in: logs/"

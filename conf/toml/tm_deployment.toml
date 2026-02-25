@@ -1,7 +1,8 @@
 [server]
-#hostname = "tm.wso2.com"
+hostname = "localhost"
 node_ip = "127.0.0.1"
 server_role = "traffic-manager"
+offset=2
 
 [user_store]
 type = "database_unique_id"
@@ -13,7 +14,7 @@ create_admin_account = true
 
 [database.shared_db]
 type = "mysql"
-url = "jdbc:mysql://localhost:3356/shared_db320?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+url = "jdbc:mysql://localhost:3357/shared_db400?autoReconnect=true&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
 username = "sharedadmin"
 password = "sharedadmin123"
 driver="com.mysql.cj.jdbc.Driver"
@@ -29,3 +30,11 @@ key_password =  "wso2carbon"
 file_name = "client-truststore.jks"
 type = "JKS"
 password = "wso2carbon"
+
+# Event Hub configurations
+[apim.event_hub]
+enable = true
+username = "$ref{super_admin.username}"
+password = "$ref{super_admin.password}"
+service_url = "https://localhost:9443/services/"
+event_listening_endpoints = ["tcp://localhost:5672"]
