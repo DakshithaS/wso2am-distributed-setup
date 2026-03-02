@@ -120,10 +120,10 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 **📝 Note:** The `.env` file contains default, non-sensitive values and is tracked in Git for easy setup.
 
 ### Profile Port Configuration
-- **Traffic Manager**: 9711 (offset: 0)
-- **Key Manager**: 9443 (offset: 1)
-- **Publisher**: 9445 (offset: 2)
-- **Developer Portal**: 9446 (offset: 3)
+- **Traffic Manager**: 9446 (offset: 3)
+- **Key Manager**: 9443 (offset: 0)
+- **Publisher**: 9444 (offset: 1)
+- **Developer Portal**: 9445 (offset: 2)
 - **Gateway**: 8284, 8247 (offset: 4)
 
 ## 🛠️ Scripts Reference
@@ -197,10 +197,10 @@ SHARED_DB_PASSWORD=sharedadmin123 # Shared database password
 - ✅ **Logging**: Individual startup logs for each profile
 
 **Startup Order:**
-1. Traffic Manager (9711)
+1. Traffic Manager (9446)
 2. Key Manager (9443)
-3. Publisher (9443 + offset 2)
-4. Developer Portal (9446)
+3. Publisher (9444)
+4. Developer Portal (9445)
 5. Gateway (8280, 8243)
 
 ### 5. `stop-distributed-profiles.sh` ⏹️
@@ -398,9 +398,11 @@ curl http://localhost:8280/services/
 ```
 
 ### Step 6: Access Services
-- **Publisher**: https://localhost:9443/publisher
-- **Developer Portal**: https://localhost:9446/devportal
-- **Admin Portal**: https://localhost:9443/admin
+- **Traffic Manager**: https://localhost:9446/carbon
+- **Key Manager**: https://localhost:9443/carbon
+- **Publisher**: https://localhost:9444/publisher
+- **Developer Portal**: https://localhost:9445/devportal
+- **Admin Portal**: https://localhost:9444/admin
 - **Gateway**: http://localhost:8280, https://localhost:8243
 
 ### Step 7: Shutdown

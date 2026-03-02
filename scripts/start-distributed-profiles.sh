@@ -14,10 +14,10 @@ PROFILE_NAMES=("Traffic Manager" "Key Manager" "Publisher" "Developer Portal" "G
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9711" ;;
+        "tm") echo "9446" ;;
         "km") echo "9443" ;;
-        "pub") echo "9445" ;;
-        "dev") echo "9446" ;;
+        "pub") echo "9444" ;;
+        "dev") echo "9445" ;;
         "gw") echo "8284 8247" ;;
         *) echo "" ;;
     esac
@@ -151,11 +151,11 @@ fi
 
 echo ""
 echo "📋 Service URLs:"
-echo "   • Traffic Manager:  https://localhost:9711/carbon"
+echo "   • Traffic Manager:  https://localhost:9446/carbon"
 echo "   • Key Manager:      https://localhost:9443/carbon"  
-echo "   • Admin:            https://localhost:9445/admin"
-echo "   • Publisher:        https://localhost:9445/publisher"
-echo "   • Developer Portal: https://localhost:9446/devportal"
+echo "   • Admin:            https://localhost:9444/admin"
+echo "   • Publisher:        https://localhost:9444/publisher"
+echo "   • Developer Portal: https://localhost:9445/devportal"
 echo "   • Gateway:          https://localhost:8284 (HTTP) / https://localhost:8247 (HTTPS)"
 echo ""
 echo "📁 Logs available in: logs/"

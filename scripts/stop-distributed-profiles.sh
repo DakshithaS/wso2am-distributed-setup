@@ -22,10 +22,10 @@ PROFILE_NAMES=("Gateway" "Developer Portal" "Publisher" "Key Manager" "Traffic M
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9711" ;;
+        "tm") echo "9446" ;;
         "km") echo "9443" ;;
-        "pub") echo "9445" ;;
-        "dev") echo "9446" ;;
+        "pub") echo "9444" ;;
+        "dev") echo "9445" ;;
         "gw") echo "8284 8247" ;;
         *) echo "" ;;
     esac
