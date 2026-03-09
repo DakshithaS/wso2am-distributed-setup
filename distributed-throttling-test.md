@@ -17,13 +17,3 @@ docker exec wso2am-redis redis-cli dbsize
 # Clear all keys (reset for testing)
 docker exec wso2am-redis redis-cli flushdb
 ```
-
-## Monitoring Commands
-```bash
-# Monitor keys in real-time (press Ctrl+C to stop)
-docker exec wso2am-redis redis-cli --raw monitor | grep throttler
-
-# Get all throttle keys with values
-docker exec wso2am-redis redis-cli --raw keys 'wso2_throttler:*' | xargs -I {} sh -c 'echo "{}: $(docker exec wso2am-redis redis-cli get "{}")"'
-```</content>
-<parameter name="filePath">/Users/dakshithas/Downloads/Patches/throttle/wso2am-distributed-setup/distributed-throttling-test.md
