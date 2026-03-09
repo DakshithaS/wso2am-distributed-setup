@@ -8,7 +8,9 @@ wso2am-*/
 components/
 
 # Logs
-logs/
+# keep the logs directory in the repo but ignore its contents
+logs/*
+!logs/.gitkeep
 *.log
 
 # Database Files
