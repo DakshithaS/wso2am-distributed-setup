@@ -102,7 +102,6 @@ for i in "${!PROFILES[@]}"; do
             "cp") profile_flag="control-plane" ;;
             "gw") profile_flag="gateway-worker" ;;
         esac
-        export JAVA_HOME="/Users/dakshithas/.sdkman/candidates/java/11.0.26-tem"
         nohup sh bin/api-manager.sh -Dprofile=$profile_flag > "$BASE_DIR/logs/startup-$profile.log" 2>&1 &
         echo $! > "$profile.pid"
         echo "   Started with PID: $(cat $profile.pid)"
