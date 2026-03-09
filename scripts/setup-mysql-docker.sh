@@ -224,7 +224,39 @@ fi
 echo "Setting up databases..."
 "$SCRIPT_DIR/setup-mysql-databases.sh"
 
-echo "Docker MySQL setup complete!"
-echo "Container: $CONTAINER_NAME"
-echo "Port: $MYSQL_PORT"
-echo "Root password: $MYSQL_ROOT_PASSWORD"
+# Setup Redis for distributed throttling
+echo "Setting up Redis for distributed throttling..."
+if docker ps --format "{{.Names}}" | grep -q "^wso2am-redis$"; then
+    echo "✓ Redis container 'wso2am-redis' is already running"
+else
+    echo "Starting Redis container..."
+    docker-compose -f "$BASE_DIR/docker-compose-redis.yaml" up -d
+    if [ $? -eq 0 ]; then
+        echo "✓ Redis container started successfully"
+        # Wait for Redis to be ready
+        echo "Waiting for Redis to be ready..."
+        max_attempts=10
+        attempt=0
+        while [ $attempt -lt $max_attempts ]; do
+            if docker exec wso2am-redis redis-cli ping | grep -q "PONG"; then
+                echo "✓ Redis is ready!"
+                break
+            fi
+            attempt=$((attempt + 1))
+            echo "Attempt $attempt/$max_attempts: Waiting for Redis..."
+            sleep 2
+        done
+        if [ $attempt -eq $max_attempts ]; then
+            echo "❌ Warning: Redis failed to respond, but continuing setup"
+        fi
+    else
+        echo "❌ Error: Failed to start Redis container"
+        exit 1
+    fi
+fi
+
+echo "Docker MySQL and Redis setup complete!"
+echo "MySQL Container: $CONTAINER_NAME"
+echo "MySQL Port: $MYSQL_PORT"
+echo "Redis Container: wso2am-redis"
+echo "Redis Port: 6379"

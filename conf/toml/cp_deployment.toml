@@ -72,3 +72,22 @@ event_listening_endpoints = ["tcp://localhost:5672"]
 [[apim.event_hub.publish.url_group]]
 urls = ["tcp://localhost:9611"]
 auth_urls = ["ssl://localhost:9711"]
+
+# Distributed Throttling Configuration
+[apim.distributed_throttling]
+enable = true
+type = "redis"
+sync_interval = 1
+core_pool_size = 5
+
+[apim.distributed_throttling.keyvalue_store]
+host = "localhost"
+port = 6379
+user = ""
+max_total = 20
+max_idle = 20
+min_idle = 4
+block_when_exhausted = true
+test_while_idle = true
+min_evictable_idle_time_millis = 3000
+time_between_eviction_runs_millis = 1200

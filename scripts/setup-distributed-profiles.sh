@@ -26,7 +26,7 @@ if [ -z "$SOURCE_DIR" ]; then
 fi
 
 COMPONENTS_DIR="$BASE_DIR/components"
-PROFILES=("cp" "tm" "gw")
+PROFILES=("cp" "tm-1" "tm-2" "tm-3" "gw-1" "gw-2")
 
 # Setup MySQL connector
 setup_mysql_connector() {
@@ -67,12 +67,21 @@ for i in "${!PROFILES[@]}"; do
     chmod +x bin/profileSetup.sh
     case "$profile" in
         "cp") sh bin/profileSetup.sh -Dprofile=control-plane ;;
-        "tm") sh bin/profileSetup.sh -Dprofile=traffic-manager ;;
-        "gw") sh bin/profileSetup.sh -Dprofile=gateway-worker ;;
+        "tm-1"|"tm-2"|"tm-3") sh bin/profileSetup.sh -Dprofile=traffic-manager ;;
+        "gw-1"|"gw-2") sh bin/profileSetup.sh -Dprofile=gateway-worker ;;
     esac
     
     # Replace deployment.toml if custom config exists
-    toml_source="$BASE_DIR/conf/toml/${profile}_deployment.toml"
+    toml_file=""
+    case "$profile" in
+        "cp") toml_file="cp_deployment.toml" ;;
+        "tm-1") toml_file="tm_deployment.toml" ;;
+        "tm-2") toml_file="tm-2_deployment.toml" ;;
+        "tm-3") toml_file="tm-3_deployment.toml" ;;
+        "gw-1") toml_file="gw_deployment.toml" ;;
+        "gw-2") toml_file="gw-2_deployment.toml" ;;
+    esac
+    toml_source="$BASE_DIR/conf/toml/$toml_file"
     if [ -f "$toml_source" ]; then
         cp "$toml_source" "$target_dir/repository/conf/deployment.toml"
         echo "Custom deployment.toml applied"

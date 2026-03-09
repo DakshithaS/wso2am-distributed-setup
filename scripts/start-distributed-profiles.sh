@@ -7,16 +7,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$(dirname "$SCRIPT_DIR")"
 COMPONENTS_DIR="$BASE_DIR/components"
 
-# Start profiles in order: tm -> cp -> gw (Traffic Manager first, then Control Plane, then Gateway)
-PROFILES=("tm" "cp" "gw")
-PROFILE_NAMES=("Traffic Manager" "Control Plane" "Gateway Worker")
+# Start profiles in order: tm -> cp -> gw (Traffic Managers first, then Control Plane, then Gateway Workers)
+PROFILES=("tm-1" "tm-2" "tm-3" "cp" "gw-1" "gw-2")
+PROFILE_NAMES=("Traffic Manager 1" "Traffic Manager 2" "Traffic Manager 3" "Control Plane" "Gateway Worker 1" "Gateway Worker 2")
 
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9713" ;;  # 9711 + 2 (offset for TM)
-        "cp") echo "9443 9443" ;;  # Control Plane: publisher and devportal (offset 0)
-        "gw") echo "8281 8244" ;;  # Gateway: HTTP and HTTPS (offset 1: 8280+1, 8243+1)
+        "tm-1") echo "9713" ;;
+        "tm-2") echo "9714" ;;
+        "tm-3") echo "9715" ;;
+        "cp") echo "9443" ;;
+        "gw-1") echo "8244" ;;
+        "gw-2") echo "8248" ;;
         *) echo "" ;;
     esac
 }
@@ -98,9 +101,9 @@ for i in "${!PROFILES[@]}"; do
         cd "$profile_dir"
         # Determine the profile flag
         case $profile in
-            "tm") profile_flag="traffic-manager" ;;
+            tm-*) profile_flag="traffic-manager" ;;
             "cp") profile_flag="control-plane" ;;
-            "gw") profile_flag="gateway-worker" ;;
+            gw-*) profile_flag="gateway-worker" ;;
         esac
         export JAVA_HOME="/Users/dakshithas/.sdkman/candidates/java/11.0.26-tem"
         nohup sh bin/api-manager.sh -Dprofile=$profile_flag > "$BASE_DIR/logs/startup-$profile.log" 2>&1 &

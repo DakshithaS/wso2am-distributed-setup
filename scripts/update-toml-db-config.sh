@@ -79,7 +79,10 @@ echo ""
 # Update each TOML file with appropriate database configurations
 update_toml_db_config "$TOML_DIR/cp_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/tm_deployment.toml" "both"
+update_toml_db_config "$TOML_DIR/tm-2_deployment.toml" "both"
+update_toml_db_config "$TOML_DIR/tm-3_deployment.toml" "both"
 update_toml_db_config "$TOML_DIR/gw_deployment.toml" "shared"
+update_toml_db_config "$TOML_DIR/gw-2_deployment.toml" "shared"
 
 echo ""
 echo "Database configuration update completed!"

@@ -42,8 +42,9 @@ password = "$ref{super_admin.password}"
 throttle_decision_endpoints = ["tcp://localhost:5674"]
 
 [[apim.throttling.url_group]]
-traffic_manager_urls=["tcp://localhost:9613"]
-traffic_manager_auth_urls=["ssl://localhost:9713"]
+traffic_manager_urls = ["tcp://localhost:9613", "tcp://localhost:9614", "tcp://localhost:9615"]
+traffic_manager_auth_urls = ["ssl://localhost:9713", "ssl://localhost:9714", "ssl://localhost:9715"]
+type = "loadbalance"
 
 # Event Hub configurations
 [apim.event_hub]

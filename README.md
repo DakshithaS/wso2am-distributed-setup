@@ -1,6 +1,6 @@
-# WSO2 API Manager 4.x.0 Distributed Setup
+# WSO2 API Manager 4.x.0 Distributed Setup with Throttling
 
-🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database integration**
+🚀 **Complete automation for WSO2 API Manager distributed deployment with MySQL database and Redis-based distributed throttling**
 
 ## ⚠️ Critical Requirements
 
@@ -22,7 +22,7 @@ unzip wso2am-4.x.0.zip
 
 ### 2. One-Command Complete Setup
 ```bash
-# Setup MySQL database with Docker
+# Setup MySQL and Redis databases with Docker
 ./scripts/setup-mysql-docker.sh
 
 # Setup all WSO2 profiles with database integration
@@ -58,7 +58,10 @@ wso2am-distributed-setup/
 │   └── toml/                          # Profile-specific configurations
 │       ├── cp_deployment.toml
 │       ├── tm_deployment.toml
-│       └── gw_deployment.toml
+│       ├── tm-2_deployment.toml
+│       ├── tm-3_deployment.toml
+│       ├── gw_deployment.toml
+│       └── gw-2_deployment.toml
 └── scripts/                            # Automation scripts
     ├── setup-mysql-docker.sh          # MySQL Docker setup
     ├── setup-mysql-databases.sh       # Database initialization
@@ -80,12 +83,18 @@ wso2am-distributed-setup/
 │   └── updates/
 ├── components/                         # ← Auto-created distributed profiles
 │   ├── wso2am-cp/                     # Control Plane (Publisher + DevPortal + Key Manager)
-│   ├── wso2am-tm/                     # Traffic Manager
-│   └── wso2am-gw/                     # Gateway Worker
+│   ├── wso2am-tm-1/                   # Traffic Manager 1
+│   ├── wso2am-tm-2/                   # Traffic Manager 2
+│   ├── wso2am-tm-3/                   # Traffic Manager 3
+│   ├── wso2am-gw-1/                   # Gateway Worker 1
+│   └── wso2am-gw-2/                   # Gateway Worker 2
 ├── logs/                              # ← Auto-created startup logs
 │   ├── startup-cp.log
-│   ├── startup-tm.log
-│   └── startup-gw.log
+│   ├── startup-tm-1.log
+│   ├── startup-tm-2.log
+│   ├── startup-tm-3.log
+│   ├── startup-gw-1.log
+│   └── startup-gw-2.log
 └── ...existing files...
 ```
 

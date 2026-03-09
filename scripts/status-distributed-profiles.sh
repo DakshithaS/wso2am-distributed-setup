@@ -6,15 +6,18 @@ BASE_DIR="$(dirname "$SCRIPT_DIR")"
 COMPONENTS_DIR="$BASE_DIR/components"
 
 # Profiles and their ports
-PROFILES=("tm" "cp" "gw")
-PROFILE_NAMES=("Traffic Manager" "Control Plane" "Gateway Worker")
+PROFILES=("tm-1" "tm-2" "tm-3" "cp" "gw-1" "gw-2")
+PROFILE_NAMES=("Traffic Manager 1" "Traffic Manager 2" "Traffic Manager 3" "Control Plane" "Gateway Worker 1" "Gateway Worker 2")
 
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9711" ;;
-        "cp") echo "9443 9444" ;;
-        "gw") echo "8284 8247" ;;
+        "tm-1") echo "9713" ;;
+        "tm-2") echo "9714" ;;
+        "tm-3") echo "9715" ;;
+        "cp") echo "9443" ;;
+        "gw-1") echo "8244" ;;
+        "gw-2") echo "8248" ;;
         *) echo "" ;;
     esac
 }
@@ -67,17 +70,18 @@ if [ $running_count -eq 0 ]; then
     echo "🚫 No services are currently running"
     echo ""
     echo "💡 To start services: scripts/start-distributed-profiles.sh"
-elif [ $running_count -eq 5 ]; then
+elif [ $running_count -eq 6 ]; then
     echo "✅ All $running_count services are running"
     echo ""
     echo "🌐 Service URLs:"
-    echo "   • Traffic Manager:  https://localhost:9711/carbon"
-    echo "   • Key Manager:      https://localhost:9443/carbon"  
-    echo "   • Publisher:        https://localhost:9445/publisher"
-    echo "   • Developer Portal: https://localhost:9446/devportal"
-    echo "   • Gateway:          https://localhost:8284 (HTTP) / https://localhost:8247 (HTTPS)"
+    echo "   • Traffic Manager 1: https://localhost:9713/carbon"
+    echo "   • Traffic Manager 2: https://localhost:9714/carbon"
+    echo "   • Traffic Manager 3: https://localhost:9715/carbon"
+    echo "   • Control Plane:     https://localhost:9443/carbon"
+    echo "   • Gateway Worker 1:  https://localhost:8244 (HTTPS)"
+    echo "   • Gateway Worker 2:  https://localhost:8248 (HTTPS)"
 else
-    echo "⚠️  $running_count out of 5 services are running"
+    echo "⚠️  $running_count out of 6 services are running"
     echo ""
     echo "💡 To stop services: scripts/stop-distributed-profiles.sh"
     echo "💡 To start services: scripts/start-distributed-profiles.sh"

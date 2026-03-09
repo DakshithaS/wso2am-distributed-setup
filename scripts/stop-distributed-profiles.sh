@@ -16,15 +16,18 @@ BASE_DIR="$(dirname "$SCRIPT_DIR")"
 COMPONENTS_DIR="$BASE_DIR/components"
 
 # Stop profiles in reverse order: gw -> cp -> tm
-PROFILES=("gw" "cp" "tm")
-PROFILE_NAMES=("Gateway Worker" "Control Plane" "Traffic Manager")
+PROFILES=("gw-2" "gw-1" "cp" "tm-3" "tm-2" "tm-1")
+PROFILE_NAMES=("Gateway Worker 2" "Gateway Worker 1" "Control Plane" "Traffic Manager 3" "Traffic Manager 2" "Traffic Manager 1")
 
 # Function to get ports for a profile
 get_profile_ports() {
     case $1 in
-        "tm") echo "9711" ;;
-        "cp") echo "9443 9444" ;;
-        "gw") echo "8284 8247" ;;
+        "tm-1") echo "9713" ;;
+        "tm-2") echo "9714" ;;
+        "tm-3") echo "9715" ;;
+        "cp") echo "9443" ;;
+        "gw-1") echo "8244" ;;
+        "gw-2") echo "8248" ;;
         *) echo "" ;;
     esac
 }
