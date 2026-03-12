@@ -34,6 +34,18 @@ get_profile_ports() {
 
 echo "🛑 Force stopping WSO2 API Manager distributed profiles..."
 
+# Stop Load Balancer first
+echo "⏳ Stopping Load Balancer..."
+cd "$BASE_DIR"
+if docker ps | grep -q "wso2am-nginx-lb"; then
+    docker-compose stop nginx-lb 2>/dev/null || true
+    docker-compose rm -f nginx-lb 2>/dev/null || true
+    echo "✅ Load Balancer stopped"
+else
+    echo "ℹ️  Load Balancer not running"
+fi
+
+echo ""
 stopped_count=0
 for i in "${!PROFILES[@]}"; do
     profile="${PROFILES[i]}"

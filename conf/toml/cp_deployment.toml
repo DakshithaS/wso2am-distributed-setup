@@ -77,7 +77,7 @@ auth_urls = ["ssl://localhost:9711"]
 [apim.distributed_throttling]
 enable = true
 type = "redis"
-sync_interval = 1
+sync_interval = 10
 core_pool_size = 5
 
 [apim.distributed_throttling.keyvalue_store]

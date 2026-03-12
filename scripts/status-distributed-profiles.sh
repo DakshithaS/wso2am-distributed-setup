@@ -64,6 +64,18 @@ for i in "${!PROFILES[@]}"; do
     fi
 done
 
+# Check Load Balancer Status
+echo ""
+echo "🔄 Load Balancer Status:"
+cd "$BASE_DIR"
+if docker ps | grep -q "wso2am-nginx-lb"; then
+    echo "   🔥 Nginx Load Balancer: ✅ Running"
+    echo "   🌐 Access: http://localhost:8080 | https://localhost:8443"
+    echo "   💚 Health: http://localhost:8080/health"
+else
+    echo "   📴 Nginx Load Balancer: ❌ Not running"
+fi
+
 echo ""
 echo "=============================================="
 if [ $running_count -eq 0 ]; then
@@ -78,8 +90,11 @@ elif [ $running_count -eq 6 ]; then
     echo "   • Traffic Manager 2: https://localhost:9714/carbon"
     echo "   • Traffic Manager 3: https://localhost:9715/carbon"
     echo "   • Control Plane:     https://localhost:9443/carbon"
-    echo "   • Gateway Worker 1:  https://localhost:8244 (HTTPS)"
-    echo "   • Gateway Worker 2:  https://localhost:8248 (HTTPS)"
+    if docker ps | grep -q "wso2am-nginx-lb"; then
+        echo "   🔥 Load Balancer:    http://localhost:8080 | https://localhost:8443 (distributes traffic)"
+    fi
+    echo "   • Gateway Worker 1:  https://localhost:8244 (direct)"
+    echo "   • Gateway Worker 2:  https://localhost:8248 (direct)"
 else
     echo "⚠️  $running_count out of 6 services are running"
     echo ""

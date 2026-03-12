@@ -85,6 +85,16 @@ check_ports_before_start() {
 
 echo "🚀 Starting WSO2 API Manager distributed profiles..."
 
+# Check MySQL dependency first
+echo "🔍 Checking MySQL dependency..."
+if ! docker ps | grep -q "wso2am-mysql"; then
+    echo "❌ MySQL container not running!"
+    echo "💡 Run './scripts/setup-mysql-docker.sh' first"
+    exit 1
+else
+    echo "✅ MySQL container is running"
+fi
+
 # Check port availability before starting
 check_ports_before_start
 
@@ -156,11 +166,67 @@ else
     echo "⚠️  Some services may not have started properly"
 fi
 
+# Start Load Balancer (always try to start, regardless of gateway status)
+echo ""
+echo "🔄 Setting up Load Balancer..."
+cd "$BASE_DIR"
+
+if ! docker ps | grep -q "wso2am-nginx-lb"; then
+    echo "⏳ Starting Nginx Load Balancer..."
+    if docker-compose up -d nginx-lb 2>/dev/null; then
+        sleep 3
+        if docker ps | grep -q "wso2am-nginx-lb"; then
+            echo "✅ Load Balancer started successfully"
+            echo "   🌐 HTTP:  http://localhost:8080"
+            echo "   🔒 HTTPS: https://localhost:8443"
+            echo "   💚 Health: http://localhost:8080/health"
+        else
+            echo "⚠️  Load Balancer failed to start properly - check logs: docker logs wso2am-nginx-lb"
+        fi
+    else
+        echo "⚠️  Load Balancer failed to start - check docker-compose.yaml"
+    fi
+else
+    echo "ℹ️  Load Balancer already running"
+    echo "   🌐 Access: http://localhost:8080 | https://localhost:8443"
+fi
+
+# Check gateway status and provide appropriate messaging
+gw1_up=false
+gw2_up=false
+
+if check_service_up 8244 5; then
+    gw1_up=true
+fi
+if check_service_up 8248 5; then
+    gw2_up=true
+fi
+
+if [ "$gw1_up" = true ] && [ "$gw2_up" = true ]; then
+    echo "✅ Both gateways detected - Load Balancer will distribute traffic"
+elif [ "$gw1_up" = true ] || [ "$gw2_up" = true ]; then
+    echo "⚠️  Only one gateway detected - Load Balancer will route to healthy gateway"
+else
+    echo "❌ No gateways detected yet - Load Balancer ready but no backends available"
+    echo "   💡 Gateways may still be starting up..."
+fi
+
 echo ""
 echo "📋 Service URLs:"
 echo "   • Traffic Manager:  https://localhost:9713/carbon"
 echo "   • Control Plane:    https://localhost:9443/publisher"
 echo "                      https://localhost:9443/devportal"
-echo "   • Gateway Worker:   https://localhost:8281 (HTTP) / https://localhost:8244 (HTTPS)"
+if docker ps | grep -q "wso2am-nginx-lb"; then
+    echo "   🔥 Load Balancer:   http://localhost:8080 | https://localhost:8443"
+    if [ "$gw1_up" = true ] && [ "$gw2_up" = true ]; then
+        echo "                      (distributes between both gateways)"
+    elif [ "$gw1_up" = true ] || [ "$gw2_up" = true ]; then
+        echo "                      (routes to healthy gateway)"
+    else
+        echo "                      (waiting for gateways to be available)"
+    fi
+fi
+echo "   • Gateway Worker 1: https://localhost:8244 (direct)"
+echo "   • Gateway Worker 2: https://localhost:8248 (direct)"
 echo ""
 echo "📁 Logs available in: logs/"
